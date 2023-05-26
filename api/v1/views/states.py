@@ -10,7 +10,7 @@ from models.state import State
 def states():
     """Retrieves the list of all State objects"""
     states = storage.all("State").values()
-    return [state.to_dict() for state in states]
+    return jsonify([state.to_dict() for state in states])
 
 
 @app_views.route('/states/<state_id>', methods=['GET'])
@@ -18,7 +18,7 @@ def get_state_id(state_id):
     """Retrieves the list of State objects"""
     state = storage.get(State, state_id)
     if state:
-        return state.to_dict()
+        return jsonify(state.to_dict())
     else:
         return abort(404)
 
@@ -34,22 +34,22 @@ def delete_state_id(state_id):
     state.delete()
     del state
     storage.save()
-    return jsonify({}), 200
+    return jsonify({}, 200)
 
 
 @app_views.route('/states', methods=['POST'])
 def create_state():
     """Transform HTTP body request to dictionary"""
-    json = request.get_json()
-    if not json:
+    state_json = request.get_json()
+    if not state_json:
         abort(400, 'Not a JSON')
 
-    if "name" not in json:
+    if "name" not in state_json:
         abort(400, 'Missing name')
-    new_state = State(**json)
+    new_state = State(**state_json)
     storage.new(new_state)
     storage.save()
-    return new_state.to_dict(), 201
+    return jsonify(new_state.to_dict(), 201)
 
 
 @app_views.route('/states/<state_id>', methods=['PUT'])
@@ -65,4 +65,4 @@ def put_state(state_id):
         if k not in ['id', 'created_at', 'updated']:
             setattr(state, k, v)
     storage.save()
-    return state.to_dict()
+    return jsonify(state.to_dict())
