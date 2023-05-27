@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""A script that runs a flask application"""
+"""A view for State objects that handles all default RESTFul API actions"""
 from api.v1.views import app_views
 from models import storage
 from flask import jsonify, abort, request
@@ -61,7 +61,7 @@ def put_state(state_id):
     if not state_json:
         abort(400, 'Not a JSON')
     for k, v in request.get_json().items():
-        if k not in ['id', 'created_at', 'updated']:
+        if k not in ['id', 'created_at', 'updated_at']:
             setattr(state, k, v)
     storage.save()
     return jsonify(state.to_dict())
