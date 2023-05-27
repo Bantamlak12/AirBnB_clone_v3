@@ -42,7 +42,7 @@ def create_user():
     if 'email' not in user_json:
         abort(400, 'Missing email')
     if 'password' not in user_json:
-        abort(404, 'Missing password')
+        abort(400, 'Missing password')
     new_user = User(**user_json)
     storage.new(new_user)
     storage.save()
