@@ -3,8 +3,8 @@
 from api.v1.views import app_views
 from models import storage
 from flask import jsonify, abort, request
-from models.city import City
 from models.state import State
+from models.city import City
 
 
 @app_views.route('/states/<state_id>/cities', methods=['GET'])
@@ -28,7 +28,7 @@ def get_city(city_id):
 @app_views.route('/cities/<city_id>', methods=['DELETE'])
 def delete_city(city_id):
     """Deletes a city object"""
-    city = storage.get(City. city_id)
+    city = storage.get(City, city_id)
     if not city:
         abort(404)
     city.delete()
@@ -59,7 +59,7 @@ def create_city(state_id):
 @app_views.route('/cities/<city_id>', methods=['PUT'])
 def update_city(city_id):
     """Updates a City object"""
-    city = storage.get(State, city_id)
+    city = storage.get(City, city_id)
     if not city:
         abort(404)
     city_json = request.get_json()
