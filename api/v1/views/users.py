@@ -53,12 +53,12 @@ def create_user():
 def update_user(user_id):
     """Update a user object"""
     user = storage.get(User, user_id)
-    user_json = request.get_json()
     if not user:
         abort(404)
+    user_json = request.get_json()
     if not user_json:
         abort(400, 'Not a JSON')
-    for k, v in user_json:
+    for k, v in user_json.items():
         if k not in ['id', 'email', 'created_at', 'updated_at']:
             setattr(user, k, v)
     storage.save()
