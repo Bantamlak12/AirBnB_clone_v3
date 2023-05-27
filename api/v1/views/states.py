@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""A script that runs a flask application"""
+"""A view for State objects that handles all default RESTFul API actions"""
 from api.v1.views import app_views
 from models import storage
 from flask import jsonify, abort, request
