@@ -18,7 +18,7 @@ def get_places(city_id):
     return jsonify([place.to_dict() for place in city.places])
 
 
-@app_views.route('/places/<place_id>', methods=['GET'], strict_slahes=False)
+@app_views.route('/places/<place_id>', methods=['GET'], strict_slashes=False)
 def get_place(place_id):
     """Retrieves a Place object"""
     place = storage.get(Place, place_id)
@@ -58,13 +58,13 @@ def create_place(city_id):
     if 'name' not in place_json:
         abort(400, 'Missing name')
     new_place = Place(**place_json)
-    setattr(new_place, 'user_id', user_id)
+    setattr(new_place, 'city_id', city_id)
     storage.new(new_place)
     storage.save()
     return jsonify(new_place.to_dict()), 201
 
 
-@app_views.routes('/places/<place_id>', methods=['PUT'], strict_slashes=False)
+@app_views.route('/places/<place_id>', methods=['PUT'], strict_slashes=False)
 def update_places(place_id):
     """Updates a place object"""
     place = storage.get(Place, place_id)
