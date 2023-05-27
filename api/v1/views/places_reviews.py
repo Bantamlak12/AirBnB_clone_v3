@@ -43,7 +43,7 @@ def delete_review(review_id):
                  strict_slashes=False)
 def create_review(place_id):
     """Creates a Review object"""
-    if not storage(Place, place_id):
+    if not storage.get(Place, place_id):
         abort(404)
 
     review_json = request.get_json()
@@ -53,7 +53,7 @@ def create_review(place_id):
         abort(400, 'Missing user_id')
 
     user_id = review_json['user_id']
-    if not storage(User, user_id):
+    if not storage.get(User, user_id):
         abort(404)
 
     if 'text' not in review_json:
