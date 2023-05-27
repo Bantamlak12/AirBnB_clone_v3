@@ -30,7 +30,7 @@ def delete_user(user_id):
         abort(404)
     user.delete()
     storage.save()
-    return jsonify(user.to_dict()), 200
+    return jsonify({}), 200
 
 
 @app_views.route('/users', methods=['POST'], strict_slashes=False)
