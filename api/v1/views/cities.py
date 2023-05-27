@@ -50,7 +50,7 @@ def create_city(state_id):
     if 'name' not in city_json:
         abort(400, 'Missing name')
     new_city = City(**city_json)
-    new_city.state_id = state_id
+    setattr(new_city, 'state_id', state_id)
     storage.new(new_city)
     storage.save()
     return jsonify(new_city.to_dict()), 201
@@ -67,6 +67,6 @@ def update_city(city_id):
         abort(400, 'Not a JSON')
     for k, v in city_json.items():
         if k not in ['id', 'state_id', 'created_at', 'updated_at']:
-            city.k = v
+            setattr(city, k, v)
     storage.save()
     return jsonify(city.to_dict())
