@@ -8,7 +8,7 @@ import inspect
 import models
 from models import amenity
 from models.base_model import BaseModel
-import pep8
+import subprocess
 import unittest
 Amenity = amenity.Amenity
 
@@ -22,17 +22,19 @@ class TestAmenityDocs(unittest.TestCase):
 
     def test_pep8_conformance_amenity(self):
         """Test that models/amenity.py conforms to PEP8."""
-        pep8s = pep8.StyleGuide(quiet=True)
-        result = pep8s.check_files(['models/amenity.py'])
-        self.assertEqual(result.total_errors, 0,
-                         "Found code style errors (and warnings).")
+        r = subprocess.run(['pycodestyle',
+                           'models/amenity.py'],
+                           capture_output=True, text=True)
+        self.assertEqual(r.returncode, 0,
+                         "pycodestyle errors: \n{}".format(r.stdout))
 
     def test_pep8_conformance_test_amenity(self):
         """Test that tests/test_models/test_amenity.py conforms to PEP8."""
-        pep8s = pep8.StyleGuide(quiet=True)
-        result = pep8s.check_files(['tests/test_models/test_amenity.py'])
-        self.assertEqual(result.total_errors, 0,
-                         "Found code style errors (and warnings).")
+        r = subprocess.run(['pycodestyle', 'tests/test_models/'
+                            'test_amenity.py'],
+                           capture_output=True, text=True)
+        self.assertEqual(r.returncode, 0,
+                         "pycodestyle errors: \n{}".format(r.stdout))
 
     def test_amenity_module_docstring(self):
         """Test for the amenity.py module docstring"""
