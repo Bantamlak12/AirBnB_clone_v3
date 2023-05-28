@@ -3,9 +3,9 @@
 from datetime import datetime
 import inspect
 import models
-import pep8 as pycodestyle
 import time
 import unittest
+import subprocess
 from unittest import mock
 BaseModel = models.base_model.BaseModel
 module_doc = models.base_model.__doc__
@@ -19,13 +19,21 @@ class TestBaseModelDocs(unittest.TestCase):
         """Set up for docstring tests"""
         self.base_funcs = inspect.getmembers(BaseModel, inspect.isfunction)
 
-    def test_pep8_conformance(self):
+    def test_pep8_conformance_base_model(self):
         """Test that models/base_model.py conforms to PEP8."""
-        for path in ['models/base_model.py',
-                     'tests/test_models/test_base_model.py']:
-            with self.subTest(path=path):
-                errors = pycodestyle.Checker(path).check_all()
-                self.assertEqual(errors, 0)
+        r = subprocess.run(['pycodestyle',
+                           'models/base_model.py'],
+                           capture_output=True, text=True)
+        self.assertEqual(r.returncode, 0,
+                         "pycodestyle errors: \n{}".format(r.stdout))
+
+    def test_pep8_conformance_test_base_model(self):
+        """Test that tests/test_models/test_base_model.py conforms to PEP8."""
+        r = subprocess.run(['pycodestyle', 'tests/test_models/'
+                            'test_base_model.py'],
+                           capture_output=True, text=True)
+        self.assertEqual(r.returncode, 0,
+                         "pycodestyle errors: \n{}".format(r.stdout))
 
     def test_module_docstring(self):
         """Test for the existence of module docstring"""
