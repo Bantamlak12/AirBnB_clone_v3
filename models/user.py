@@ -28,22 +28,14 @@ class User(BaseModel, Base):
     def __init__(self, *args, **kwargs):
         """initializes user"""
         super().__init__(*args, **kwargs)
+        if 'password' in kwargs:
+            self.password = self._hash_password(kw['password'])
 
-    @property
-    def password(self):
-        """Gets the hashed value of the user's password."""
-        return self._password
+    def update_password(self, new_passwd):
+        """Updates password"""
+        self.password = self._hash_password(new_passwd)
 
-    @password.setter
-    def password(self, value):
-        """Sets the user's password."""
-        if value is not None:
-            self._password = hashlib.md5(value.encode()).hexdigest()
-        else:
-            self._password = None
-
-    @validates('password')
-    def validate_password(self, key, password):
-        """Validates the user's password."""
-        assert password is not None, "Password cannot be None"
-        return hashlib.md5(password.encode()).hexdigest()
+    def hash_password(self, passwd):
+        """Password hashed"""
+        hashed_passwd = hashlib.md5(passwd.encode()).hexdigest()
+        return hashed_passwd
