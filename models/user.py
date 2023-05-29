@@ -31,10 +31,12 @@ class User(BaseModel, Base):
 
     @property
     def password(self):
+        """Gets the hashed value of the user's password."""
         return self._password
 
     @password.setter
     def password(self, value):
+        """Sets the user's password."""
         if value is not None:
             self._password = hashlib.md5(value.encode()).hexdigest()
         else:
@@ -42,5 +44,6 @@ class User(BaseModel, Base):
 
     @validates('password')
     def validate_password(self, key, password):
+        """Validates the user's password."""
         assert password is not None, "Password cannot be None"
         return hashlib.md5(password.encode()).hexdigest()
