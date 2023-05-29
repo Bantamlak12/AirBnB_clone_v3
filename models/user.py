@@ -6,6 +6,7 @@ from os import getenv
 import sqlalchemy
 from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
+import hashlib
 
 
 class User(BaseModel, Base):
@@ -27,3 +28,19 @@ class User(BaseModel, Base):
     def __init__(self, *args, **kwargs):
         """initializes user"""
         super().__init__(*args, **kwargs)
+
+    @property
+    def password(self):
+        return self._password
+
+    @password.setter
+    def password(self, value):
+        if value is not None:
+            self._password = hashlib.md5(value.encode()).hexdigest()
+        else:
+            self._password = None
+
+    @validates('password')
+    def validate_password(self, key, password):
+        assert password is not None, "Password cannot be None"
+        return hashlib.md5(password.encode()).hexdigest()
